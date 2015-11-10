@@ -11,11 +11,20 @@ import UIKit
 class ChecklistViewController: UITableViewController {
     
     var items: [ChecklistItem]
-    let tableIdentifier = "ChecklistItem"
+    let tableViewCellIdentifier = "CheckListTableViewCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: Selector("sortArray"), forControlEvents: .ValueChanged)
+        self.refreshControl = refreshControl
+    }
+    
+    func sortArray() {
+        tableView.reloadData();
+        refreshControl?.endRefreshing()
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,9 +68,9 @@ class ChecklistViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell? = tableView.dequeueReusableCellWithIdentifier(tableIdentifier)
+        var cell:UITableViewCell? = tableView.dequeueReusableCellWithIdentifier(tableViewCellIdentifier)
         let item = items[indexPath.row]
-        cell = UITableViewCell(style: .Subtitle, reuseIdentifier: tableIdentifier)
+        cell = UITableViewCell(style: .Subtitle, reuseIdentifier: tableViewCellIdentifier)
         configureTextForCell(cell!, withChecklistItem: item)
         configureSubtitleForCell(cell!, withChecklistItem: item)
         configureCheckmarkForCell(cell!, withChecklistItem: item)
